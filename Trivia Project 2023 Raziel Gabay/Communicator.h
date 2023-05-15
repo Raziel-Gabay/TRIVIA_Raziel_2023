@@ -11,19 +11,18 @@
 
 class Communicator
 {
-private: 
+public:
+	Communicator();
+	~Communicator();
+	void startHandleRequests();
+private:
 	//fields
 	SOCKET m_serverSocket;
-	std::map<SOCKET, IRequestHandler> m_clients;
+	std::map<SOCKET, IRequestHandler*> m_clients;
 	//std::mutex m_clientsMutex;
 
 	//methods
 	void bindAndListen();
 	void handleNewClient(SOCKET);
-
-public:
-	Communicator();
-	~Communicator();
-	void startHandleRequests();
 
 };
