@@ -10,7 +10,7 @@ def main():
             sock.connect(server_address)
             server_msg = sock.recv(1024)
             server_msg = server_msg.decode()
-            print(server_msg)
+            print("server: " + server_msg)
             client_msg = input("Enter 'hello': ")
             sock.sendall(client_msg.encode())
     except Exception as e:
