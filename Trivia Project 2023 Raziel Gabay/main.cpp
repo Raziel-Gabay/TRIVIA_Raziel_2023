@@ -3,13 +3,9 @@
 #include "WSAInitializer.h"
 #include <fstream>
 
-// In a lot of places in the code we pass to function constant reference (const Bla&)
-// to an object and not the object itself, 
 
 int main()
 {
-	// Q: why is this try necessarily ?
-	// A: we want to know what happened that made the server crush
 	try
 	{
 

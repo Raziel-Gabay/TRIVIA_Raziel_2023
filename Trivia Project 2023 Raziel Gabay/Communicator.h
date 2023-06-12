@@ -7,6 +7,7 @@
 #include <map>
 #include <string>
 //#include "IRequestHandler.h"
+#include "JsonRequestPacketDeserializer.h"
 #include "LoginRequestHandler.h"
 
 class Communicator
