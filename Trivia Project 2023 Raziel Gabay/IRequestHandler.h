@@ -3,6 +3,7 @@
 #include <vector>
 #include "json.hpp"
 #include "JsonResponsePacketSerializer.h"
+#include "JsonRequestPacketDeserializer.h"
 
 using json = nlohmann::json;
 typedef std::vector<unsigned char> Buffer;

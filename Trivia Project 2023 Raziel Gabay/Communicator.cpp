@@ -85,7 +85,7 @@ void Communicator::startHandleRequests()
 			throw std::exception(__FUNCTION__);
 
 		TRACE("Client accepted !");
-		this->m_clients[client_socket] = new LoginRequestHandler(); 
+		this->m_clients[client_socket] = this->m_handlerFactory.createLoginRequestHandler();
 
 		// create new thread for client	and detach from it
 		std::thread tr(&Communicator::handleNewClient, this, client_socket);
