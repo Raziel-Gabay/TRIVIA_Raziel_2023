@@ -13,6 +13,24 @@ SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(Buffer sig
 	return SignupRequest{ messageJson["username"],messageJson["password"], messageJson["mail"]};
 }
 
+GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersRequest(Buffer getPlayerRequest)
+{
+	json messageJson = JsonRequestPacketDeserializer::deserializeRequest(getPlayerRequest);
+	return GetPlayersInRoomRequest{ messageJson["id"]};
+}
+
+JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(Buffer joinRoomRequest)
+{
+	json messageJson = JsonRequestPacketDeserializer::deserializeRequest(joinRoomRequest);
+	return JoinRoomRequest{ messageJson["id"] };
+}
+
+CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(Buffer createRoomRequest)
+{
+	json messageJson = JsonRequestPacketDeserializer::deserializeRequest(createRoomRequest);
+	return CreateRoomRequest{ messageJson["name"] , messageJson["maxPlayers"], messageJson["numOfQuestionsInGame"],messageJson["timePerQuestion"]};
+}
+
 json JsonRequestPacketDeserializer::deserializeRequest(Buffer request)
 {
 	std::string message;

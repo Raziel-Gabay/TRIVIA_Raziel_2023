@@ -41,7 +41,6 @@ RequestResult LoginRequestHandler::handleRequest(const RequestInfo& reqInfo)
 RequestResult LoginRequestHandler::login(RequestInfo info)
 {
 	RequestResult result;
-	result.newHandler = this->m_handlerFactory.createLoginRequestHandler();
 
 	LoginRequest req = JsonRequestPacketDeserializer::deserializeLoginRequest(info.buffer);
 	if (!this->m_loginManager.isUserLogged(req.username))
@@ -49,10 +48,12 @@ RequestResult LoginRequestHandler::login(RequestInfo info)
 		this->m_loginManager.login(req.username, req.password);
 		LoginResponse logResponse;
 		result.response = JsonResponsePacketSerializer::serializeResponse(logResponse);
+		result.newHandler = this->m_handlerFactory.createMenuRequestHandler(req.username);
 	}
 	//if it's not valid
 	else
 	{
+		result.newHandler = nullptr;
 		ErrorResponse errorResponse;
 		result.response = JsonResponsePacketSerializer::serializeResponse(errorResponse);
 	}
@@ -62,11 +63,11 @@ RequestResult LoginRequestHandler::login(RequestInfo info)
 RequestResult LoginRequestHandler::signup(RequestInfo info)
 {
 	RequestResult result;
-	result.newHandler = this->m_handlerFactory.createLoginRequestHandler();
 
 	SignupRequest req = JsonRequestPacketDeserializer::deserializeSignupRequest(info.buffer);
 	if (!this->m_loginManager.doesUserExist(req.username))
 	{
+		result.newHandler = this->m_handlerFactory.createLoginRequestHandler();
 		this->m_loginManager.signup(req.username, req.password, req.email);
 		SignupResponse signupResponse;
 		result.response = JsonResponsePacketSerializer::serializeResponse(signupResponse);
