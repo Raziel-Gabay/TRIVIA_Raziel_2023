@@ -7,7 +7,7 @@ public:
 	LoggedUser(std::string username) :
 		_username(username){}
 
-	std::string getUsernamer()
+	std::string getUsername()
 	{
 		return this->_username;
 	}

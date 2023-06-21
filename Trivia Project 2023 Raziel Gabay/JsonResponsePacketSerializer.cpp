@@ -4,6 +4,7 @@
 
 Buffer JsonResponsePacketSerializer::serializeResponse(ErrorResponse response)
 {
+
     json responseJson = "{ \"message\":" + response.message + "}";
     std::string responseStr = responseJson.dump();
     return JsonResponsePacketSerializer::serializeResponse(responseStr, ERROR_CODE);
@@ -22,6 +23,85 @@ Buffer JsonResponsePacketSerializer::serializeResponse(SignupResponse response)
     json responseJson = "{ \"status\":" + std::to_string(response.status) + "}";
     std::string responseStr = responseJson.dump();
     return JsonResponsePacketSerializer::serializeResponse(responseStr, SIGNUP_CODE);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(LogoutResponse response)
+{
+    json responseJson = "{ \"status\":" + std::to_string(response.status) + "}";
+    std::string responseStr = responseJson.dump();
+    return JsonResponsePacketSerializer::serializeResponse(responseStr, LOGOUT_CODE);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(GetRoomsResponse response)
+{
+    std::string responseStr = "{ \"status\":" + std::to_string(response.status) + ",\"Rooms\":[";
+    for (auto it = response.rooms.begin(); it != response.rooms.end(); ++it)
+    {
+        responseStr += "{\"id\":" + std::to_string(it->id) + ",\"name\":\"" + it->name
+            + "\",\"maxPlayers\":" + std::to_string(it->maxPlayers) + ",\"numOfQuestionsInGame\":" + std::to_string(it->numOfQuestionsInGame)
+            + ",\"timePerQuestion\":" + std::to_string(it->timePerQuestion) + ",\"isActive\":" + std::to_string(it->isActive) + "},";
+    }
+    responseStr.pop_back();
+    responseStr += "]}";
+    json responseJson = responseStr;
+    responseStr = responseJson.dump();
+    return JsonResponsePacketSerializer::serializeResponse(responseStr, GET_ROOMS_CODE);
+}   
+
+Buffer JsonResponsePacketSerializer::serializeResponse(GetPlayersInRoomResponse response)
+{
+    std::string responseStr = "{\"PlayersInRoom\":[";
+    for (auto it = response.players.begin(); it != response.players.end(); ++it)
+    {
+        responseStr += "\"" + *it + "\",";
+    }
+    responseStr.pop_back();
+    responseStr += "]}";
+    json responseJson = responseStr;
+    responseStr = responseJson.dump();
+    return JsonResponsePacketSerializer::serializeResponse(responseStr, GET_PLAYERS_IN_ROOM_CODE);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(GetHighScoreResponse response)
+{
+    std::string responseStr = "{ \"status\":" + std::to_string(response.status) + ",\"HighScores\":<";
+    for (auto it = response.statistics.begin(); it != response.statistics.end(); ++it)
+    {
+        responseStr += "\"" + *it + "\",";
+    }
+    responseStr.pop_back();
+    responseStr += ">}";
+    json responseJson = responseStr;
+    responseStr = responseJson.dump();
+    return JsonResponsePacketSerializer::serializeResponse(responseStr, GET_HIGHSCORE_CODE);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(GetPersonalStatsResponse response)
+{
+    std::string responseStr = "{ \"status\":" + std::to_string(response.status) + ",\"UserStatistics\":<";
+    for (auto it = response.statistics.begin(); it != response.statistics.end(); ++it)
+    {
+        responseStr += "\"" + *it + "\",";
+    }
+    responseStr.pop_back();
+    responseStr += ">}";
+    json responseJson = responseStr;
+    responseStr = responseJson.dump();
+    return JsonResponsePacketSerializer::serializeResponse(responseStr, GET_PERSONAL_STATS_CODE);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(JoinRoomResponse response)
+{
+    json responseJson = "{ \"status\":" + std::to_string(response.status) + "}";
+    std::string responseStr = responseJson.dump();
+    return JsonResponsePacketSerializer::serializeResponse(responseStr, JOIN_ROOM_CODE);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(CreateRoomResponse response)
+{
+    json responseJson = "{ \"status\":" + std::to_string(response.status) + "}";
+    std::string responseStr = responseJson.dump();
+    return JsonResponsePacketSerializer::serializeResponse(responseStr, CREATE_ROOM_CODE);
 }
 
 
