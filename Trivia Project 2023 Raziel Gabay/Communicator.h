@@ -9,18 +9,19 @@
 //#include "IRequestHandler.h"
 #include "JsonRequestPacketDeserializer.h"
 #include "LoginRequestHandler.h"
+#include "MenuRequestHandler.h"
 
 class Communicator
 {
 public:
-	Communicator();
+	Communicator(RequestHandlerFactory& handlerFactory);
 	~Communicator();
 	void startHandleRequests();
 private:
 	//fields
 	SOCKET m_serverSocket;
 	std::map<SOCKET, IRequestHandler*> m_clients;
-	RequestHandlerFactory m_handlerFactory;
+	RequestHandlerFactory& m_handlerFactory;
 	//std::mutex m_clientsMutex;
 
 	//methods

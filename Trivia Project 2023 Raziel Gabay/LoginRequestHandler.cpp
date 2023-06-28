@@ -31,7 +31,7 @@ RequestResult LoginRequestHandler::handleRequest(const RequestInfo& reqInfo)
 	else
 	{
 		RequestResult result;
-		result.newHandler = this->m_handlerFactory.createLoginRequestHandler();
+		result.newHandler = nullptr;
 		ErrorResponse errorResponse;
 		result.response = JsonResponsePacketSerializer::serializeResponse(errorResponse);
 		return result;
@@ -43,17 +43,27 @@ RequestResult LoginRequestHandler::login(RequestInfo info)
 	RequestResult result;
 
 	LoginRequest req = JsonRequestPacketDeserializer::deserializeLoginRequest(info.buffer);
-	if (!this->m_loginManager.isUserLogged(req.username))
+	std::cout << "client: {username: " << req.username << ", password: " << req.password << "}" << std::endl;
+	if (!this->m_loginManager.isUserLogged(req.username) && this->m_loginManager.doesUserExist(req.username))
 	{
 		this->m_loginManager.login(req.username, req.password);
-		LoginResponse logResponse;
-		result.response = JsonResponsePacketSerializer::serializeResponse(logResponse);
-		result.newHandler = this->m_handlerFactory.createMenuRequestHandler(req.username);
+		if (this->m_loginManager.isUserLogged(req.username))
+		{
+			LoginResponse logResponse;
+			result.response = JsonResponsePacketSerializer::serializeResponse(logResponse);
+			result.newHandler = this->m_handlerFactory.createMenuRequestHandler(req.username);
+		}
+		else
+		{
+			ErrorResponse errorResponse;
+			result.response = JsonResponsePacketSerializer::serializeResponse(errorResponse);
+			result.newHandler = this->m_handlerFactory.createLoginRequestHandler();
+		}
 	}
 	//if it's not valid
 	else
 	{
-		result.newHandler = nullptr;
+		result.newHandler = this->m_handlerFactory.createLoginRequestHandler();
 		ErrorResponse errorResponse;
 		result.response = JsonResponsePacketSerializer::serializeResponse(errorResponse);
 	}
@@ -65,12 +75,22 @@ RequestResult LoginRequestHandler::signup(RequestInfo info)
 	RequestResult result;
 
 	SignupRequest req = JsonRequestPacketDeserializer::deserializeSignupRequest(info.buffer);
+	std::cout << "client: {username: " << req.username << ", password: " << req.password << ", mail: " << req.email << "}" << std::endl;
 	if (!this->m_loginManager.doesUserExist(req.username))
 	{
 		result.newHandler = this->m_handlerFactory.createLoginRequestHandler();
 		this->m_loginManager.signup(req.username, req.password, req.email);
-		SignupResponse signupResponse;
-		result.response = JsonResponsePacketSerializer::serializeResponse(signupResponse);
+		if (this->m_loginManager.doesUserExist(req.username))
+		{
+			SignupResponse signupResponse;
+			result.response = JsonResponsePacketSerializer::serializeResponse(signupResponse);
+		}
+		else
+		{
+			ErrorResponse errorResponse;
+			result.response = JsonResponsePacketSerializer::serializeResponse(errorResponse);
+		}
+	
 	}
 	//if it's not valid
 	else

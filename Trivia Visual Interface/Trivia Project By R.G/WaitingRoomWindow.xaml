@@ -1,0 +1,87 @@
+﻿<Window x:Class="Trivia_Project_By_R.G.WaitingRoomWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Trivia_Project_By_R.G"
+        mc:Ignorable="d"
+        Title="Waiting Room" Height="600" Width="800">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="C:/Users/test0/OneDrive/מסמכים/magshimim/'כיתה יא/עקרונות/פרויקט טריוויה/פרויקט טריוויה - גיט/trivia_raziel_2023/Trivia Visual Interface/Trivia Project By R.G/GeneralBG.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="4*" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="36" Foreground="#FF00DDFF" FontFamily="Aharoni" Content="Admin:">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+
+        <Label x:Name="Admin" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="55" Foreground="White" FontFamily="Aharoni" Content="">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+
+        <ListBox Grid.Row="1" Grid.ColumnSpan="2" x:Name="playersListBox" SelectionMode="Single" Margin="10,10,10,70" Opacity="0.75" Background="#FF040404" RenderTransformOrigin="0.5,0.5" d:ItemsSource="{d:SampleData ItemCount=5}" Foreground="#FF00FF2A" FontFamily="Aharoni" FontSize="36">
+            <ListBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleX="0.294"/>
+                    <RotateTransform/>
+                    <TranslateTransform X="1.328"/>
+                </TransformGroup>
+            </ListBox.RenderTransform>
+
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+
+                            <ControlTemplate TargetType="ListBoxItem">
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="1"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="1" Background="Gray" Width="1" Margin="5"/>
+                                    <Grid>
+                                        <!-- ContentPresenter to display the item content -->
+                                        <ContentPresenter />
+                                        <!-- Separator as a visual element -->
+                                        <Separator HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
+                                    </Grid>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+
+        <Button Grid.Row="3" Grid.ColumnSpan="3" Content="Back"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Bottom"
+        Margin="10,0,0,10"
+        Width="100" Height="50" FontSize="28" FontFamily="Aharoni" Background="#FF7000B8" Foreground="#FFDF5F58" Click="BackToLastWindow">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="25"></Setter>
+                </Style>
+            </Button.Resources>
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+    </Grid>
+</Window>

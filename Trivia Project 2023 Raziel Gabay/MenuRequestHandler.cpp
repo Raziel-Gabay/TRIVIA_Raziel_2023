@@ -53,7 +53,7 @@ RequestResult MenuRequestHandler::handleRequest(const RequestInfo& requestInfo)
 	else
 	{
 		RequestResult result;
-		result.newHandler = this->m_handlerFactory.createMenuRequestHandler(this->m_user);
+		result.newHandler = this->m_handlerFactory.createMenuRequestHandler(this->m_user.getUsername());
 		ErrorResponse errorResponse;
 		result.response = JsonResponsePacketSerializer::serializeResponse(errorResponse);
 		return result;
@@ -63,7 +63,8 @@ RequestResult MenuRequestHandler::handleRequest(const RequestInfo& requestInfo)
 RequestResult MenuRequestHandler::signout(RequestInfo info)
 {
 	RequestResult result;
-	result.newHandler = this->m_handlerFactory.createMenuRequestHandler(this->m_user);
+	this->m_handlerFactory.getLoginManager().logout(this->m_user.getUsername());
+	result.newHandler = this->m_handlerFactory.createLoginRequestHandler();
 
 	LogoutResponse logoutResponse;
 	result.response = JsonResponsePacketSerializer::serializeResponse(logoutResponse);
@@ -74,9 +75,11 @@ RequestResult MenuRequestHandler::signout(RequestInfo info)
 RequestResult MenuRequestHandler::getRooms(RequestInfo info)
 {
 	RequestResult result;
-	result.newHandler = this->m_handlerFactory.createMenuRequestHandler(this->m_user);
+	result.newHandler = this;
+
 
 	GetRoomsResponse getRoomsResponse;
+	getRoomsResponse.rooms = this->m_roomManager.getRooms();
 	result.response = JsonResponsePacketSerializer::serializeResponse(getRoomsResponse);
 
 	return result;
@@ -85,7 +88,7 @@ RequestResult MenuRequestHandler::getRooms(RequestInfo info)
 RequestResult MenuRequestHandler::getPlayersInRoom(RequestInfo info)
 {
 	RequestResult result;
-	result.newHandler = this->m_handlerFactory.createMenuRequestHandler(this->m_user);
+	result.newHandler = this;
 
 	GetPlayersInRoomRequest req = JsonRequestPacketDeserializer::deserializeGetPlayersRequest(info.buffer);
 
@@ -98,7 +101,7 @@ RequestResult MenuRequestHandler::getPlayersInRoom(RequestInfo info)
 RequestResult MenuRequestHandler::getPersonalStats(RequestInfo info)
 {
 	RequestResult result;
-	result.newHandler = this->m_handlerFactory.createMenuRequestHandler(this->m_user);
+	result.newHandler = this;
 
 	GetPersonalStatsResponse getPersonalStatsResponse;
 	getPersonalStatsResponse.statistics =  this->m_statisticsManager.getUserStatistics(this->m_user.getUsername());
@@ -110,7 +113,7 @@ RequestResult MenuRequestHandler::getPersonalStats(RequestInfo info)
 RequestResult MenuRequestHandler::getHighScore(RequestInfo info)
 {
 	RequestResult result;
-	result.newHandler = this->m_handlerFactory.createMenuRequestHandler(this->m_user);
+	result.newHandler = this;
 
 	GetHighScoreResponse getHighScoreResponse;
 	getHighScoreResponse.statistics = this->m_statisticsManager.getHighScore();
@@ -122,7 +125,7 @@ RequestResult MenuRequestHandler::getHighScore(RequestInfo info)
 RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 {
 	RequestResult result;
-	result.newHandler = this->m_handlerFactory.createMenuRequestHandler(this->m_user);
+	result.newHandler = this;
 
 	JoinRoomRequest req = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(info.buffer);
 
@@ -137,7 +140,7 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 RequestResult MenuRequestHandler::createRoom(RequestInfo info)
 {
 	RequestResult result;
-	result.newHandler = this->m_handlerFactory.createMenuRequestHandler(this->m_user);
+	result.newHandler = this;
 
 	CreateRoomRequest req = JsonRequestPacketDeserializer::deserializeCreateRoomRequest(info.buffer);
 
@@ -147,7 +150,7 @@ RequestResult MenuRequestHandler::createRoom(RequestInfo info)
 		rd.id = 1;
 	}
 	else
-		rd.id = this->m_roomManager.getRooms().begin()->id + 1;
+	rd.id = this->m_roomManager.getRooms().begin()->id + 1;
 	rd.name = req.roomName;
 	rd.isActive = true; 
 	rd.maxPlayers = req.maxUsers;

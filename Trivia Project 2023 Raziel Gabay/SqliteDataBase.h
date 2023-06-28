@@ -50,7 +50,5 @@ private:
 	std::string ss; // sqlStatement as String
 	char** errMessage;
 
-	//private methods
-	void TenQuestionInstaliize();
 };
 

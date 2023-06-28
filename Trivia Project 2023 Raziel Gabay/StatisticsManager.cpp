@@ -1,5 +1,10 @@
 #include "StatisticsManager.h"
 
+StatisticsManager::StatisticsManager()
+{
+    m_database = new SqliteDataBase();
+}
+
 std::vector<std::string> StatisticsManager::getHighScore()
 {
     return m_database->getHighScores();
