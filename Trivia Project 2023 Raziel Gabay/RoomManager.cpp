@@ -4,7 +4,7 @@ void RoomManager::createRoom(LoggedUser user, RoomData data)
 {
 	std::vector<LoggedUser> users;
 	users.push_back(user);
-	this->m_rooms[data.id] = Room((data),users);
+	this->m_rooms[data.id] = Room(data,users);
 }
 
 void RoomManager::deleteRoom(int ID)

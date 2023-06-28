@@ -16,6 +16,7 @@ struct RoomData
 class Room
 {
 public:
+	Room();		
 	Room(RoomData metadata, std::vector<LoggedUser> users);
 	void addUser(LoggedUser lu);
 	void removeUser(LoggedUser lu);

@@ -25,27 +25,29 @@ bool SqliteDataBase::open()
 		sqlStatement = R"(CREATE TABLE USERS (ID INTEGER PRIMARY
 			KEY AUTOINCREMENT NOT NULL,
 			Username TEXT NOT NULL, Password TEXT NOT NULL, Mail TEXT);)";
-		if (!checks())
-		{
+		errMessage = nullptr;
+		res = sqlite3_exec(db, sqlStatement, nullptr, nullptr, errMessage);
+		if (res != SQLITE_OK)
 			return false;
-		}
+
 		//QUESTIONS Table
 		sqlStatement = R"(CREATE TABLE QUESTIONS (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, QUESTION TEXT NOT NULL,
 					CorrectAnswer TEXT NOT NULL, AnswerTwo TEXT NOT NULL,AnswerThree TEXT NOT NULL, AnswerFour TEXT NOT NULL);)";
-		if (!checks())
-		{
+		errMessage = nullptr;
+		res = sqlite3_exec(db, sqlStatement, nullptr, nullptr, errMessage);
+		if (res != SQLITE_OK)
 			return false;
-		}
-		TenQuestionInstaliize();
+
 
 		//STATISTICS Table
 		sqlStatement = R"(CREATE TABLE STATISTICS (Username TEXT NOT NULL,AverageAnswerTime FLOAT,
 					NumOfCorrectAnswers INT, NumOfTotalAnswers INT,NumOfPlayerGames INT, PlayerScore INT);)";
-		if (!checks())
-		{
+		errMessage = nullptr;
+		res = sqlite3_exec(db, sqlStatement, nullptr, nullptr, errMessage);
+		if (res != SQLITE_OK)
 			return false;
-		}
 
+		TenQuestionInstaliize();
 	}
 }
 
@@ -69,15 +71,30 @@ int SqliteDataBase::doesPasswordMatch(std::string passOne, std::string passTwo)
 
 int SqliteDataBase::addNewUser(std::string username, std::string paswword, std::string mail)
 {
-	ss = "INSERT INTO USERS (Username, Password, Mail) VALUES ('" + username + "', '" + paswword + "', '" + mail + "');";
+	if (!mail.empty())
+		ss = "INSERT INTO USERS (Username, Password, Mail) VALUES ('" + username + "', '" + paswword + "', '" + mail + "');";
+	else
+		ss = "INSERT INTO USERS (Username, Password) VALUES ('" + username + "', '" + paswword + "');";
 	sqlStatement = ss.c_str();
-	return checks();
+	errMessage = nullptr;
+	res = sqlite3_exec(db, sqlStatement, NULL, nullptr, errMessage);
+	if (res != SQLITE_OK)
+		return false;
+	else
+	{
+		ss = "INSERT INTO STATISTICS(Username) values('" + username + "');";
+		sqlStatement = ss.c_str();
+		errMessage = nullptr;
+		res = sqlite3_exec(db, sqlStatement, NULL, nullptr, errMessage);
+		if (res != SQLITE_OK)
+			return false;
+		else return true;
+	}
 }
 
 std::string SqliteDataBase::getPasswordFromUsername(std::string username)
 {
 	std::string password;
-	password.clear();
 	ss = "SELECT Password FROM USERS WHERE USERNAME = '" + username + "';";
 	sqlStatement = ss.c_str();
 	errMessage = nullptr;
@@ -124,6 +141,7 @@ float SqliteDataBase::getPlayerAverageAnswerTime(std::string username)
 {
 	float averageAnswerTime;
 	ss = "SELECT AverageAnswerTime FROM STATISTICS WHERE Username = '" + username + "';";
+	sqlStatement = ss.c_str();
 	errMessage = nullptr;
 	res = sqlite3_exec(db, sqlStatement, AverageAnswerTimeCallback, &averageAnswerTime, errMessage);
 	if (res != SQLITE_OK)
@@ -137,6 +155,7 @@ int SqliteDataBase::getNumOfCorrectAnswers(std::string username)
 {
 	int numOfCorrectAnswers;
 	ss = "SELECT NumOfCorrectAnswers FROM STATISTICS WHERE Username = '" + username + "';";
+	sqlStatement = ss.c_str();
 	errMessage = nullptr;
 	res = sqlite3_exec(db, sqlStatement, CountCallback, &numOfCorrectAnswers, errMessage);
 	if (res != SQLITE_OK)
@@ -150,6 +169,7 @@ int SqliteDataBase::getNumOfTotalAnswers(std::string username)
 {
 	int numOfTotalAnswers;
 	ss = "SELECT NumOfTotalAnswers FROM STATISTICS WHERE Username = '" + username + "';";
+	sqlStatement = ss.c_str();
 	errMessage = nullptr;
 	res = sqlite3_exec(db, sqlStatement, CountCallback, &numOfTotalAnswers, errMessage);
 	if (res != SQLITE_OK)
@@ -163,6 +183,7 @@ int SqliteDataBase::getNumOfPlayerGames(std::string username)
 {
 	int numOfPlayerGames;
 	ss = "SELECT NumOfPlayerGames FROM STATISTICS WHERE Username = '" + username + "';";
+	sqlStatement = ss.c_str();
 	errMessage = nullptr;
 	res = sqlite3_exec(db, sqlStatement, CountCallback, &numOfPlayerGames, errMessage);
 	if (res != SQLITE_OK)
@@ -176,6 +197,7 @@ int SqliteDataBase::getPlayerScore(std::string username)
 {
 	int playerScore;
 	ss = "SELECT PlayerScore FROM STATISTICS WHERE Username = '" + username + "';";
+	sqlStatement = ss.c_str();
 	errMessage = nullptr;
 	res = sqlite3_exec(db, sqlStatement, CountCallback, &playerScore, errMessage);
 	if (res != SQLITE_OK)
@@ -188,13 +210,16 @@ int SqliteDataBase::getPlayerScore(std::string username)
 std::vector<std::string> SqliteDataBase::getHighScores()
 {
 	std::vector<std::string> highscores;
-	ss = "SELECT Username FROM STATISTICS ORDER BY PlayerScore DESC LIMIT 5;";
+	ss = "SELECT Username,PlayerScore FROM STATISTICS ORDER BY PlayerScore DESC LIMIT 3;";
+	//ss = "SELECT Username FROM Users Where Username IN (SELECT Username FROM STATISTICS ORDER BY PlayerScore DESC LIMIT 3);";
+	sqlStatement = ss.c_str();
 	errMessage = nullptr;
 	res = sqlite3_exec(db, sqlStatement, HighscoreCallback, &highscores, errMessage);
 	if (res != SQLITE_OK)
 	{
 		throw errMessage;
 	}
+	std::cout << errMessage;
 	return highscores;
 }
 
@@ -211,7 +236,12 @@ bool SqliteDataBase::checks()
 int SqliteDataBase::CountCallback(void* data, int argc, char** argv, char** azColName)
 {
 	int* count = static_cast<int*>(data);
-	*count = atoi(argv[0]);
+	if (argv[0] == NULL)
+		*count = 0;
+	else
+	{
+		*count = atoi(argv[0]);
+	}
 	return 0;
 }
 
@@ -244,7 +274,7 @@ int SqliteDataBase::QuestionCallback(void* data, int argc, char** argv, char** a
 
 int SqliteDataBase::PasswordCallback(void* data, int argc, char** argv, char** azColName)
 {
-	auto password = static_cast<std::string*>(data);
+	std::string* password = static_cast<std::string*>(data);
 	for (int i = 0; i < argc; i++) {
 
 		if (std::string(azColName[i]) == "Password") {
@@ -260,7 +290,12 @@ int SqliteDataBase::AverageAnswerTimeCallback(void* data, int argc, char** argv,
 	for (int i = 0; i < argc; i++) {
 
 		if (std::string(azColName[i]) == "AverageAnswerTime") {
-			*answerTime = atof(argv[i]);
+			if (argv[i] == NULL)
+				*answerTime = 0;
+			else
+			{
+				*answerTime = std::stof(argv[i]);
+			}
 		}
 	}
 	return 0;
@@ -269,9 +304,23 @@ int SqliteDataBase::AverageAnswerTimeCallback(void* data, int argc, char** argv,
 int SqliteDataBase::HighscoreCallback(void* data, int argc, char** argv, char** azColName)
 {
 	auto highscoreUsers = static_cast<std::vector<std::string>*>(data);
-	highscoreUsers->push_back(argv[0]);
+	for (int i = 0; i < argc; i++)
+		{
+			if (std::string(azColName[i]) == "Username")
+				highscoreUsers->push_back(argv[i]);
+			if (std::string(azColName[i]) == "PlayerScore")
+			{
+				if (argv[i] == NULL)
+					highscoreUsers->push_back("0");
+				else
+				{
+					highscoreUsers->push_back(argv[i]);
+				}
+			}
+	}
 	return 0;
 }
+	
 
 int SqliteDataBase::callbackExist(void* data, int argc, char** argv, char** azColName)
 {
@@ -355,10 +404,14 @@ void SqliteDataBase::TenQuestionInstaliize()
 		std::string a3 = incorrectAnswers2[i];
 		std::string a4 = incorrectAnswers3[i];
 
-		std::string ss = "INSERT INTO QUESTIONS (QUESTION, CorrectAnswer, AnswerTwo, AnswerThree, AnswerFour) VALUES ('" + q + "', '" + ca + "', '" + a2 + "', '" + a3 + "', '" + a4 + "');";
+		ss = "INSERT INTO QUESTIONS (QUESTION, CorrectAnswer, AnswerTwo, AnswerThree, AnswerFour) VALUES (\"" + q + "\", \"" + ca + "\", \"" + a2 + "\", \"" + a3 + "\", \"" + a4 + "\");";
 
 		sqlStatement = ss.c_str();
-		checks();
+		errMessage = nullptr;
+		res = sqlite3_exec(db, sqlStatement, NULL, nullptr, errMessage);
+		if (res != SQLITE_OK)
+			std::cout << errMessage << std::endl;
+			throw errMessage;
 	}
 
 }

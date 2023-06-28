@@ -1,5 +1,10 @@
 #include "Room.h"
 
+Room::Room()
+	: m_metadata{ 0, "", 0, 0, 0, 0 }, m_users{}
+{
+}
+
 Room::Room(RoomData metadata, std::vector<LoggedUser> users)
 	:m_metadata(metadata), m_users(users)
 {
@@ -7,7 +12,15 @@ Room::Room(RoomData metadata, std::vector<LoggedUser> users)
 
 void Room::addUser(LoggedUser lu)
 {
-	this->m_users.push_back(lu);
+	bool flag = true;
+	for (auto it = this->m_users.begin(); it != this->m_users.end(); ++it)
+	{
+		if (*it == lu)
+		{
+			flag == false;
+		}
+	}
+	if (flag) this->m_users.push_back(lu);
 }
 
 void Room::removeUser(LoggedUser lu)
