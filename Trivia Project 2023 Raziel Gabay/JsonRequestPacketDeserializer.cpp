@@ -10,6 +10,10 @@ LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(Buffer login
 SignupRequest JsonRequestPacketDeserializer::deserializeSignupRequest(Buffer signupRequest)
 {
 	json messageJson = JsonRequestPacketDeserializer::deserializeRequest(signupRequest);
+	if (messageJson["mail"] == "null")
+	{
+		messageJson["mail"].clear();
+	}
 	return SignupRequest{ messageJson["username"],messageJson["password"], messageJson["mail"]};
 }
 
@@ -34,11 +38,15 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(Bu
 json JsonRequestPacketDeserializer::deserializeRequest(Buffer request)
 {
 	std::string message;
-	for (auto iter = request.begin() + MESSAGE_START_INDEX; iter != request.end(); ++iter)
+	for (auto iter = request.begin() + MESSAGE_START_INDEX ; iter != request.end(); ++iter)
 	{
 		message += *iter;
 	}
 
+	if (message[0] != '{')
+	{
+		message = message.substr(1);
+	}
 	json messageJson = json::parse(message);
 
 	return messageJson;

@@ -1,0 +1,103 @@
+﻿<Window x:Class="Trivia_Project_By_R.G.UserStatisticsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Trivia_Project_By_R.G"
+        mc:Ignorable="d"
+        Title="User Statistics" Height="600" Width="800">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="C:/Users/test0/OneDrive/מסמכים/magshimim/'כיתה יא/עקרונות/פרויקט טריוויה/פרויקט טריוויה - גיט/trivia_raziel_2023/Trivia Visual Interface/Trivia Project By R.G/GeneralBG.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+
+        <!-- Average Answer Time -->
+        <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36" Foreground="#FF00DDFF" FontFamily="Aharoni" Content="Average Answer Time:">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="AverageAnswerTime" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="55" Foreground="White" FontFamily="Aharoni" Content="">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+
+        <!-- Number of correct answers -->
+        <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36" Foreground="#FF00DDFF" FontFamily="Aharoni" Content="Correct Answers:">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="CorrectAnswers" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="55" Foreground="White" FontFamily="Aharoni" Content="">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+
+        <!-- Number of total answers -->
+        <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36" Foreground="#FF00DDFF" FontFamily="Aharoni" Content="Total Answers:">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="TotalAnswers" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="55" Foreground="White" FontFamily="Aharoni" Content="">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+
+        <!-- Number of Player Games -->
+        <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36" Foreground="#FF00DDFF" FontFamily="Aharoni" Content="Number Of Games:">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="NumberOfGames" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="55" Foreground="White" FontFamily="Aharoni" Content="">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+
+        <!-- Player Score -->
+        <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36" Foreground="#FF00DDFF" FontFamily="Aharoni" Content="Score:">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="Score" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="55" Foreground="White" FontFamily="Aharoni" Content="">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+
+
+        <Button Grid.Row="4" Grid.ColumnSpan="3" Content="Back"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Bottom"
+        Margin="10,0,0,10"
+        Width="100" Height="50" FontSize="28" FontFamily="Aharoni" Background="#FF7000B8" Foreground="#FFDF5F58" Click="BackToLastWindow">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="25"></Setter>
+                </Style>
+            </Button.Resources>
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+    </Grid>
+   
+</Window>

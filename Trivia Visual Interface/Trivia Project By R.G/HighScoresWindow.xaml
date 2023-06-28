@@ -1,0 +1,98 @@
+﻿<Window x:Class="Trivia_Project_By_R.G.HighScoresWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Trivia_Project_By_R.G"
+        mc:Ignorable="d"
+        Title="High Scores" Height="600" Width="800">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="C:/Users/test0/OneDrive/מסמכים/magshimim/'כיתה יא/עקרונות/פרויקט טריוויה/פרויקט טריוויה - גיט/trivia_raziel_2023/Trivia Visual Interface/Trivia Project By R.G/GeneralBG.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="2*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="1.5*" />
+        </Grid.ColumnDefinitions>
+        
+        <!-- Title -->
+        <Label Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72" Foreground="#FF00DDFF" FontFamily="Aharoni" Content="High Scores" Tag="TopScores" Cursor="" BorderThickness="0,0,0,5" BorderBrush="#FF00DDFF">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+
+        <!-- First place User -->
+        <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="128" Foreground="Gold" FontFamily="Aharoni" Content="#1" BorderBrush="#FF00DDFF">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="firstUsername" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36" Foreground="Gold" FontFamily="Aharoni" Content="Username: " BorderBrush="#FF00DDFF">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="firstScore" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36" Foreground="Gold" FontFamily="Aharoni" Content="Score: " BorderBrush="#FF00DDFF">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+
+        <!-- Second place User -->
+        <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="128" Foreground="Silver" FontFamily="Aharoni" Content="#2" BorderBrush="#FF00DDFF">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="secondUsername" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36" Foreground="Silver" FontFamily="Aharoni" Content="Username: " BorderBrush="#FF00DDFF">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="secondScore" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36" Foreground="Silver" FontFamily="Aharoni" Content="Score: " BorderBrush="#FF00DDFF">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <!-- Second place User -->
+        <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="128" Foreground="#FFCD7F32" FontFamily="Aharoni" Content="#3" BorderBrush="#FF00DDFF">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="thirdUsername" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36" Foreground="#FFCD7F32" FontFamily="Aharoni" Content="Username: " BorderBrush="#FF00DDFF">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="thirdScore" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="36" Foreground="#FFCD7F32" FontFamily="Aharoni" Content="Score: " BorderBrush="#FF00DDFF">
+            <Label.Effect>
+                <DropShadowEffect/>
+            </Label.Effect>
+        </Label>
+
+        <Button Grid.Row="3" Grid.ColumnSpan="3" Content="Back"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Bottom"
+        Margin="0,0,0,5"
+        Width="100" Height="50" FontSize="28" FontFamily="Aharoni" Background="#FF7000B8" Foreground="#FFDF5F58" Click="BackToLastWindow">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="25"></Setter>
+                </Style>
+            </Button.Resources>
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+    </Grid>
+</Window>

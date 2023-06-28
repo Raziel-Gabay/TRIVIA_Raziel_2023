@@ -2,7 +2,11 @@
 
 #include "json.hpp"
 #include <vector>
+#include <list>
+#include <map>
 #include <bitset>
+#include <variant>
+#include <ios>
 #include "Room.h"
 
 using json = nlohmann::json;

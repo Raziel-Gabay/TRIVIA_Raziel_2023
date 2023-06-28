@@ -2,6 +2,7 @@
 
 LoginManager::LoginManager()
 {
+
 	m_database = new SqliteDataBase;
 }
 
@@ -23,7 +24,7 @@ void LoginManager::login(std::string username, std::string password)
 
 void LoginManager::logout(std::string username)
 {
-	std::remove(this->m_loggedUser.begin(), this->m_loggedUser.end(), LoggedUser(username));
+	this->m_loggedUser.erase(std::remove(this->m_loggedUser.begin(), this->m_loggedUser.end(), LoggedUser(username)), this->m_loggedUser.end());
 }
 
 bool LoginManager::isUserLogged(std::string username)

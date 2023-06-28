@@ -10,8 +10,10 @@ using std::cout;
 using std::cin;
 
 
-Communicator::Communicator()
+Communicator::Communicator(RequestHandlerFactory& handlerFactory)
+	:m_handlerFactory(handlerFactory)
 {
+
 	m_serverSocket = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (m_serverSocket == INVALID_SOCKET)
 		throw std::exception(__FUNCTION__ " - socket");
@@ -40,38 +42,34 @@ void Communicator::bindAndListen()
 // recive client request, build the RequestInfo
 void Communicator::handleNewClient(SOCKET clientSocket)
 {
-	// recive client request and build the RequestInfo
-	// [code] [contet size] [contet]
-	// 1bytes   4 bytes	    size bytes
-	char clientMSG[BUFFER_SIZE] = { NULL };
-	recv(clientSocket, clientMSG, BUFFER_SIZE, NULL);
-	size_t len = MESSAGE_INDEX;
-	len += strlen(clientMSG + len);
-
-	RequestInfo reqInfo;
-	reqInfo.id = (unsigned int)clientMSG[CODE_INDEX];
-	reqInfo.receivalTime = std::time(0); // get time now
-	reqInfo.buffer.resize(len);
-	std::copy(clientMSG, clientMSG + len, reqInfo.buffer.begin()); //convert the message to Buffer type 
-
-	//printing the requset of the user
-	if (reqInfo.id == LOGIN_CODE)
+	while (true)
 	{
-		LoginRequest req = JsonRequestPacketDeserializer::deserializeLoginRequest(reqInfo.buffer);
-		cout << "client: {username: " << req.username << ", password: " << req.password << "}" << endl;
-	}
-	if (reqInfo.id == SIGNUP_CODE)
-	{
-		SignupRequest req = JsonRequestPacketDeserializer::deserializeSignupRequest(reqInfo.buffer);
-		cout << "client: {username: " << req.username << ", password: " << req.password << ", mail: " << req.email << "}" << endl;
-	}
-	//handling the request
-	RequestResult reqResult = this->m_clients[clientSocket]->handleRequest(reqInfo);
+		// recive client request and build the RequestInfo
+		// [code] [contet size] [contet]
+		// 1bytes   4 bytes	    size bytes
+		char clientMSG[BUFFER_SIZE] = { NULL };
+		recv(clientSocket, clientMSG, BUFFER_SIZE, NULL);
+		size_t len = MESSAGE_INDEX;
+		len += strlen(clientMSG + len);
 
-	// send response to client
-	std::string serverMSG = std::string(std::begin(reqResult.response), std::end(reqResult.response));
-	send(clientSocket, serverMSG.c_str(), serverMSG.length(), NULL);
+		RequestInfo reqInfo;
+		reqInfo.id = (unsigned int)clientMSG[CODE_INDEX];
+		reqInfo.receivalTime = std::time(0); // get time now
+		reqInfo.buffer.resize(len);
+		std::copy(clientMSG, clientMSG + len, reqInfo.buffer.begin()); //convert the message to Buffer type 
 
+		//handling the request
+		RequestResult reqResult = this->m_clients[clientSocket]->handleRequest(reqInfo);
+		if (this->m_clients[clientSocket] != reqResult.newHandler)
+		{
+			delete this->m_clients[clientSocket];
+			this->m_clients[clientSocket] = reqResult.newHandler;
+		}
+		// send response to client
+		std::string serverMSG = std::string(std::begin(reqResult.response), std::end(reqResult.response));
+
+		send(clientSocket, serverMSG.c_str(), static_cast<int>(serverMSG.size()), NULL);
+	}
 	// close the socket
 	closesocket(clientSocket);
 }

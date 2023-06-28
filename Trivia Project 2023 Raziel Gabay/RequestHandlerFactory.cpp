@@ -1,5 +1,11 @@
 #include "RequestHandlerFactory.h"
 
+RequestHandlerFactory::RequestHandlerFactory()
+	:m_loginManager(LoginManager()), m_roommManager(RoomManager()), m_statisticsManager(StatisticsManager())
+{
+	m_database = new SqliteDataBase;
+}
+
 LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
 {
 	LoginRequestHandler* ptr = new LoginRequestHandler(*this);
@@ -25,4 +31,9 @@ StatisticsManager& RequestHandlerFactory::getStatisticsManager()
 RoomManager& RequestHandlerFactory::getRoomManager()
 {
 	return this->m_roommManager;
+}
+
+IDatabase*& RequestHandlerFactory::getDataBase()
+{
+	return this->m_database;
 }

@@ -1,8 +1,10 @@
 #pragma once
+
 #include "IRequestHandler.h"
 #include "RequestHandlerFactory.h"
 #include "StatisticsManager.h"
 
+class RequestHandlerFactory;
 
 class MenuRequestHandler : public IRequestHandler
 {
@@ -12,13 +14,13 @@ public:
 	virtual RequestResult handleRequest(const RequestInfo& requestInfo) override;
 
 private:
-	//fields
+	// Fields
 	LoggedUser m_user;
 	RoomManager& m_roomManager;
 	StatisticsManager& m_statisticsManager;
-	RequestHandlerFactory& m_handlerFactory;
+	RequestHandlerFactory& m_handlerFactory;  // Reference to RequestHandlerFactory
 
-	//private methods
+	// Private methods
 	RequestResult signout(RequestInfo info);
 	RequestResult getRooms(RequestInfo info);
 	RequestResult getPlayersInRoom(RequestInfo info);
@@ -26,6 +28,4 @@ private:
 	RequestResult getHighScore(RequestInfo info);
 	RequestResult joinRoom(RequestInfo info);
 	RequestResult createRoom(RequestInfo info);
-
 };
-
