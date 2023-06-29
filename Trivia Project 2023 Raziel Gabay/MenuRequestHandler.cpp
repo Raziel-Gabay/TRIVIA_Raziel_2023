@@ -125,12 +125,12 @@ RequestResult MenuRequestHandler::getHighScore(RequestInfo info)
 RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 {
 	RequestResult result;
-	result.newHandler = this;
 
 	JoinRoomRequest req = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(info.buffer);
 
 	this->m_roomManager.getRoom(req.roomid).addUser(this->m_user);
 
+	result.newHandler = this->m_handlerFactory.createRoomMemberRequestHandler(this->m_user, this->m_roomManager.getRoom(req.roomid));
 	JoinRoomResponse joinRoomResponse;
 	result.response = JsonResponsePacketSerializer::serializeResponse(joinRoomResponse);
 
@@ -140,7 +140,6 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo info)
 RequestResult MenuRequestHandler::createRoom(RequestInfo info)
 {
 	RequestResult result;
-	result.newHandler = this;
 
 	CreateRoomRequest req = JsonRequestPacketDeserializer::deserializeCreateRoomRequest(info.buffer);
 
@@ -158,6 +157,7 @@ RequestResult MenuRequestHandler::createRoom(RequestInfo info)
 	rd.timePerQuestion = req.answerTimeout;
 	this->m_roomManager.createRoom(this->m_user, rd);
 
+	result.newHandler = this->m_handlerFactory.createRoomAdminRequestHandler(this->m_user, this->m_roomManager.getRoom(rd.id));
 	CreateRoomResponse createRoomResponse;
 	result.response = JsonResponsePacketSerializer::serializeResponse(createRoomResponse);
 

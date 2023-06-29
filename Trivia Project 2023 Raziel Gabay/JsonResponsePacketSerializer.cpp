@@ -116,6 +116,47 @@ Buffer JsonResponsePacketSerializer::serializeResponse(CreateRoomResponse respon
     return JsonResponsePacketSerializer::serializeResponse(responseStr, CREATE_ROOM_CODE);
 }
 
+Buffer JsonResponsePacketSerializer::serializeResponse(CloseRoomResponse response)
+{
+    json responseJson;
+    responseJson["status"] = response.status;
+    std::string responseStr = responseJson.dump();
+    return JsonResponsePacketSerializer::serializeResponse(responseStr, CLOSE_ROOM_CODE);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(StartGameResponse response)
+{
+    json responseJson;
+    responseJson["status"] = response.status;
+    std::string responseStr = responseJson.dump();
+    return JsonResponsePacketSerializer::serializeResponse(responseStr, START_GAME_CODE);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(GetRoomStateResponse response)
+{
+    json responseJson;
+    responseJson["status"] = response.status;
+    responseJson["hasGameBegun"] = response.hasGameBegun;
+    json playersJson = json::array();
+    for (auto it = response.players.begin(); it != response.players.end(); ++it)
+    {
+        playersJson.push_back(*it);
+    }
+    responseJson["players"] = playersJson;
+    responseJson["questionCount"] = response.questionCount;
+    responseJson["answerTimeout"] = response.answerTimeout;
+    std::string responseStr = responseJson.dump();
+    return JsonResponsePacketSerializer::serializeResponse(responseStr, GET_ROOM_STATE_CODE);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(LeaveRoomResponse response)
+{
+    json responseJson;
+    responseJson["status"] = response.status;
+    std::string responseStr = responseJson.dump();
+    return JsonResponsePacketSerializer::serializeResponse(responseStr, LEAVE_ROOM_CODE);
+}
+
 
 Buffer JsonResponsePacketSerializer::serializeResponse(std::string response, char code)
 {
