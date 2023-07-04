@@ -37,3 +37,15 @@ IDatabase*& RequestHandlerFactory::getDataBase()
 {
 	return this->m_database;
 }
+
+RoomAdminRequestHandler* RequestHandlerFactory::createRoomAdminRequestHandler(LoggedUser user, Room& room)
+{
+	RoomAdminRequestHandler* ptr= new RoomAdminRequestHandler(*this, user, room);
+	return ptr;
+}
+
+RoomMemberRequestHandler* RequestHandlerFactory::createRoomMemberRequestHandler(LoggedUser user, Room& room)
+{
+	RoomMemberRequestHandler* ptr = new RoomMemberRequestHandler(*this, user, room);
+	return ptr;
+}

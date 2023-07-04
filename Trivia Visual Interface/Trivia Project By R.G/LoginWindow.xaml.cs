@@ -134,6 +134,22 @@ namespace Trivia_Project_By_R.G
             result = new string(result.Reverse().ToArray());
             return result;
         }
+        static public int FourCharsToInt(string fourChars)
+        {
+            if (fourChars.Length != 4)
+            {
+                throw new ArgumentException("Input string must have exactly four characters.");
+            }
+
+            int intValue = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                intValue = (intValue << 8) | (byte)fourChars[i];
+            }
+
+            return intValue;
+        }
+
 
         private TcpClient m_client;
 

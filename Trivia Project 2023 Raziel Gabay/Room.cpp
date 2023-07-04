@@ -25,11 +25,15 @@ void Room::addUser(LoggedUser lu)
 
 void Room::removeUser(LoggedUser lu)
 {
-	for (auto it = this->m_users.begin(); it != this->m_users.end(); ++it)
+	for (auto it = this->m_users.begin(); it != this->m_users.end();)
 	{
 		if (*it == lu)
 		{
-			this->m_users.erase(it);
+			it = this->m_users.erase(it);
+		}
+		else
+		{
+			++it;
 		}
 	}
 }
@@ -47,4 +51,9 @@ std::vector<std::string> Room::getAllUsers()
 RoomData Room::getRoomData()
 {
 	return this->m_metadata;
+}
+
+void Room::setIsActive(bool isActive)
+{
+	m_metadata.isActive = isActive;
 }

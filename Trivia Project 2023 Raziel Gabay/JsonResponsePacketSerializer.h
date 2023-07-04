@@ -22,6 +22,10 @@ using json = nlohmann::json;
 #define GET_PERSONAL_STATS_CODE 106
 #define JOIN_ROOM_CODE 107
 #define CREATE_ROOM_CODE 108
+#define CLOSE_ROOM_CODE 109
+#define START_GAME_CODE 110
+#define GET_ROOM_STATE_CODE 111
+#define LEAVE_ROOM_CODE 112
 
 
 typedef std::vector<unsigned char> Buffer; // The Buffer hold the data we want to hold or recive
@@ -80,6 +84,29 @@ struct CreateRoomResponse
 	unsigned int status = 1;
 };
 
+struct CloseRoomResponse
+{
+	unsigned int status = 1;
+};
+
+struct StartGameResponse
+{
+	unsigned int status = 1;
+};
+
+struct GetRoomStateResponse
+{
+	unsigned int status = 1;
+	bool hasGameBegun;
+	std::vector<std::string> players;
+	unsigned int questionCount;
+	unsigned int answerTimeout;
+};
+
+struct LeaveRoomResponse
+{
+	unsigned int status = 1;
+};
 
 
 class JsonResponsePacketSerializer
@@ -95,5 +122,9 @@ public:
 	static Buffer serializeResponse(GetPersonalStatsResponse);
 	static Buffer serializeResponse(JoinRoomResponse);
 	static Buffer serializeResponse(CreateRoomResponse);
+	static Buffer serializeResponse(CloseRoomResponse);
+	static Buffer serializeResponse(StartGameResponse);
+	static Buffer serializeResponse(GetRoomStateResponse);
+	static Buffer serializeResponse(LeaveRoomResponse);
 	static Buffer serializeResponse(std::string response, char code);
 };

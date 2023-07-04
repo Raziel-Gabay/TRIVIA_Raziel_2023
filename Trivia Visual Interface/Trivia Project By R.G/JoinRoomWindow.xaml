@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Trivia_Project_By_R.G"
         mc:Ignorable="d"
-        Title="Join Room" Height="600" Width="800">
+        Title="Join Room" Height="600" Width="800" Activated="StartThreads">
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="C:/Users/test0/OneDrive/מסמכים/magshimim/'כיתה יא/עקרונות/פרויקט טריוויה/פרויקט טריוויה - גיט/trivia_raziel_2023/Trivia Visual Interface/Trivia Project By R.G/GeneralBG.jpg" Stretch="UniformToFill"/>

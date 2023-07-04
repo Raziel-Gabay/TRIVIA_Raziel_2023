@@ -59,6 +59,43 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 		std::copy(clientMSG, clientMSG + len, reqInfo.buffer.begin()); //convert the message to Buffer type 
 
 		//handling the request
+		if (reqInfo.id == CLOSE_ROOM_CODE || reqInfo.id == START_GAME_CODE)
+		{
+			
+			RoomAdminRequestHandler* adminHandler = dynamic_cast<RoomAdminRequestHandler*>(this->m_clients[clientSocket]);
+			std::vector<std::string> playersInRoom = adminHandler->getRoom().getAllUsers();
+			for (auto it = this->m_clients.begin(); it != this->m_clients.end(); ++it)
+			{
+				if (it->second != this->m_clients[clientSocket])
+				{
+					RoomMemberRequestHandler* memberHandler = dynamic_cast<RoomMemberRequestHandler*>(it->second);
+					if (memberHandler != nullptr)
+					{
+						if (std::find(playersInRoom.begin(), playersInRoom.end(), memberHandler->getUser().getUsername()) != playersInRoom.end())
+						{
+							std::string serverMSG;
+							if (reqInfo.id == CLOSE_ROOM_CODE)
+							{
+								RequestInfo leaveReqInfo;
+								leaveReqInfo.id = LEAVE_ROOM_CODE;
+								RequestResult leaveReqResult = it->second->handleRequest(leaveReqInfo);
+								delete this->m_clients[it->first];
+								this->m_clients[it->first] = leaveReqResult.newHandler;
+								serverMSG = std::string(std::begin(leaveReqResult.response), std::end(leaveReqResult.response));
+							}
+							else
+							{
+								StartGameResponse startGameResponse;
+								Buffer response = JsonResponsePacketSerializer::serializeResponse(startGameResponse);
+								serverMSG = std::string(std::begin(response), std::end(response));
+							}
+
+							send(it->first, serverMSG.c_str(), static_cast<int>(serverMSG.size()), NULL);
+						}
+					}
+				}
+			}
+		}
 		RequestResult reqResult = this->m_clients[clientSocket]->handleRequest(reqInfo);
 		if (this->m_clients[clientSocket] != reqResult.newHandler)
 		{
@@ -69,7 +106,7 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 		std::string serverMSG = std::string(std::begin(reqResult.response), std::end(reqResult.response));
 
 		send(clientSocket, serverMSG.c_str(), static_cast<int>(serverMSG.size()), NULL);
-	}
+	} 
 	// close the socket
 	closesocket(clientSocket);
 }
