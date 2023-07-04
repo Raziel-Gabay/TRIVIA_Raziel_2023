@@ -149,7 +149,9 @@ RequestResult MenuRequestHandler::createRoom(RequestInfo info)
 		rd.id = 1;
 	}
 	else
-	rd.id = this->m_roomManager.getRooms().begin()->id + 1;
+	{
+		rd.id = this->m_roomManager.getRooms().back().id + 1;
+	}
 	rd.name = req.roomName;
 	rd.isActive = true; 
 	rd.maxPlayers = req.maxUsers;

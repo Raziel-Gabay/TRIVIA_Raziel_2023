@@ -1,6 +1,6 @@
 #include "RoomMemberRequestHandler.h"
 
-RoomMemberRequestHandler::RoomMemberRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser user, Room room)
+RoomMemberRequestHandler::RoomMemberRequestHandler(RequestHandlerFactory& handlerFactory, LoggedUser user, Room& room)
 	: m_user(user), m_room(room), m_roomManager(handlerFactory.getRoomManager()), m_handlerFactory(handlerFactory)
 {
 }
@@ -60,7 +60,7 @@ RequestResult RoomMemberRequestHandler::getRoomState(RequestInfo)
 	result.newHandler = this;
 
 	GetRoomStateResponse getRoomStateResponse;
-	getRoomStateResponse.hasGameBegun = this->m_roomManager.getRoomState(this->m_room.getRoomData().id);
+	getRoomStateResponse.hasGameBegun = !this->m_roomManager.getRoomState(this->m_room.getRoomData().id);
 	getRoomStateResponse.players = this->m_room.getAllUsers();
 	getRoomStateResponse.questionCount = this->m_room.getRoomData().numOfQuestionsInGame;
 	getRoomStateResponse.answerTimeout = this->m_room.getRoomData().timePerQuestion;

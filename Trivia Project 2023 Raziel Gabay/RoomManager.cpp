@@ -4,17 +4,21 @@ void RoomManager::createRoom(LoggedUser user, RoomData data)
 {
 	std::vector<LoggedUser> users;
 	users.push_back(user);
-	this->m_rooms[data.id] = Room(data,users);
+	this->m_rooms[data.id] = Room(data, users);
 }
 
 void RoomManager::deleteRoom(int ID)
-{
+{	
 	//this->m_rooms.erase(this->m_rooms[ID])
-	for (auto it = this->m_rooms.begin(); it != this->m_rooms.end(); ++it)
+	for (auto it = this->m_rooms.begin(); it != this->m_rooms.end();)
 	{
 		if (it->first == ID)
 		{
-			this->m_rooms.erase(it);
+			it = this->m_rooms.erase(it);
+		}
+		else
+		{
+			++it;
 		}
 	}
 }

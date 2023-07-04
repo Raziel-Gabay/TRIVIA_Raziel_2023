@@ -25,7 +25,7 @@ using json = nlohmann::json;
 #define CLOSE_ROOM_CODE 109
 #define START_GAME_CODE 110
 #define GET_ROOM_STATE_CODE 111
-#define LEAVE_ROOM_CODE 108
+#define LEAVE_ROOM_CODE 112
 
 
 typedef std::vector<unsigned char> Buffer; // The Buffer hold the data we want to hold or recive

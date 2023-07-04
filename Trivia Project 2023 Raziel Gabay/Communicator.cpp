@@ -66,31 +66,33 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 			std::vector<std::string> playersInRoom = adminHandler->getRoom().getAllUsers();
 			for (auto it = this->m_clients.begin(); it != this->m_clients.end(); ++it)
 			{
-				RoomMemberRequestHandler* memberHandler = dynamic_cast<RoomMemberRequestHandler*>(it->second);
-				if (memberHandler == it->second)
+				if (it->second != this->m_clients[clientSocket])
 				{
-					if (std::find(playersInRoom.begin(), playersInRoom.end(), memberHandler->getUser().getUsername()) != playersInRoom.end())
+					RoomMemberRequestHandler* memberHandler = dynamic_cast<RoomMemberRequestHandler*>(it->second);
+					if (memberHandler != nullptr)
 					{
-						std::string serverMSG;
-						if (reqInfo.id == CLOSE_ROOM_CODE)
+						if (std::find(playersInRoom.begin(), playersInRoom.end(), memberHandler->getUser().getUsername()) != playersInRoom.end())
 						{
-							RequestInfo leaveReqInfo;
-							leaveReqInfo.id = LEAVE_ROOM_CODE;
-							RequestResult leaveReqResult = it->second->handleRequest(leaveReqInfo);
-							delete this->m_clients[clientSocket];
-							this->m_clients[clientSocket] = leaveReqResult.newHandler;
-							std::string serverMSG = std::string(std::begin(leaveReqResult.response), std::end(leaveReqResult.response));
-						}
-						else
-						{
-							StartGameResponse startGameResponse;
-							Buffer response = JsonResponsePacketSerializer::serializeResponse(startGameResponse);
-							std::string serverMSG = std::string(std::begin(response), std::end(response));
-						}
+							std::string serverMSG;
+							if (reqInfo.id == CLOSE_ROOM_CODE)
+							{
+								RequestInfo leaveReqInfo;
+								leaveReqInfo.id = LEAVE_ROOM_CODE;
+								RequestResult leaveReqResult = it->second->handleRequest(leaveReqInfo);
+								delete this->m_clients[it->first];
+								this->m_clients[it->first] = leaveReqResult.newHandler;
+								serverMSG = std::string(std::begin(leaveReqResult.response), std::end(leaveReqResult.response));
+							}
+							else
+							{
+								StartGameResponse startGameResponse;
+								Buffer response = JsonResponsePacketSerializer::serializeResponse(startGameResponse);
+								serverMSG = std::string(std::begin(response), std::end(response));
+							}
 
-						send(clientSocket, serverMSG.c_str(), static_cast<int>(serverMSG.size()), NULL);
+							send(it->first, serverMSG.c_str(), static_cast<int>(serverMSG.size()), NULL);
+						}
 					}
-					
 				}
 			}
 		}

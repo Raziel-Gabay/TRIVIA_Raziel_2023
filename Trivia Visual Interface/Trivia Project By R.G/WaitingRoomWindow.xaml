@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Trivia_Project_By_R.G"
         mc:Ignorable="d"
-        Title="Waiting Room" Height="600" Width="800">
-    <Grid>
+        Title="Waiting Room" Height="600" Width="800" Activated="StartThreads">
+    <Grid x:Name="WaitingRoomGrid">
         <Grid.Background>
             <ImageBrush ImageSource="C:/Users/test0/OneDrive/מסמכים/magshimim/'כיתה יא/עקרונות/פרויקט טריוויה/פרויקט טריוויה - גיט/trivia_raziel_2023/Trivia Visual Interface/Trivia Project By R.G/GeneralBG.jpg" Stretch="UniformToFill"/>
         </Grid.Background>
@@ -19,19 +19,19 @@
             <RowDefinition Height="4*" />
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="36" Foreground="#FF00DDFF" FontFamily="Aharoni" Content="Admin:">
+        <Label VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="36" Foreground="#FF00DDFF" FontFamily="Aharoni" Content="Admin:">
             <Label.Effect>
                 <DropShadowEffect/>
             </Label.Effect>
         </Label>
 
-        <Label x:Name="Admin" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="55" Foreground="White" FontFamily="Aharoni" Content="">
+        <Label x:Name="Admin" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="55" Foreground="White" FontFamily="Aharoni" Content="">
             <Label.Effect>
                 <DropShadowEffect/>
             </Label.Effect>
         </Label>
 
-        <ListBox Grid.Row="1" Grid.ColumnSpan="2" x:Name="playersListBox" SelectionMode="Single" Margin="10,10,10,70" Opacity="0.75" Background="#FF040404" RenderTransformOrigin="0.5,0.5" d:ItemsSource="{d:SampleData ItemCount=5}" Foreground="#FF00FF2A" FontFamily="Aharoni" FontSize="36">
+        <ListBox Grid.Row="1" Grid.ColumnSpan="3" x:Name="playersListBox" SelectionMode="Single" Margin="10,10,10,70" Opacity="0.75" Background="#FF040404" RenderTransformOrigin="0.5,0.5" d:ItemsSource="{d:SampleData ItemCount=5}" Foreground="#FF00FF2A" FontFamily="Aharoni" FontSize="36">
             <ListBox.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -69,11 +69,26 @@
             </ListBox.ItemContainerStyle>
         </ListBox>
 
-        <Button Grid.Row="3" Grid.ColumnSpan="3" Content="Back"
+        <Button x:Name="CloseAndLeaveButton" Grid.Row="1" Grid.ColumnSpan="1" Content=""
+        HorizontalAlignment="Right"
+        VerticalAlignment="Bottom"
+        Margin="0,0,20,10"
+        Width="200" Height="55" FontSize="28" FontFamily="Aharoni" Background="#FF7000B8" Foreground="#FFDF5F58" Click="CloseAndLeaveRoomClick">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="25"></Setter>
+                </Style>
+            </Button.Resources>
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+
+        <Button x:Name="StartGameButton" Grid.Row="1" Grid.Column="1" Content="Start Game"
         HorizontalAlignment="Left"
         VerticalAlignment="Bottom"
         Margin="10,0,0,10"
-        Width="100" Height="50" FontSize="28" FontFamily="Aharoni" Background="#FF7000B8" Foreground="#FFDF5F58" Click="BackToLastWindow">
+        Width="200" Height="55" FontSize="28" FontFamily="Aharoni" Background="#FF7000B8" Foreground="#FFDF5F58" Click="StartGameClick">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="25"></Setter>

@@ -26,6 +26,7 @@ namespace Trivia_Project_By_R.G
         public const uint CREATE_ROOM_CODE = 108;
         public const uint GET_PLAYERS_IN_ROOM_CODE = 104;
         public const uint GET_ROOMS_CODE = 103;
+        public const uint GET_ROOM_STATE_CODE = 111;
         public CreateRoomWindow(TcpClient client, string username)
         {
             InitializeComponent();
@@ -59,69 +60,26 @@ namespace Trivia_Project_By_R.G
             byte[] buffer = new byte[1024];
             int bytesRead = stream.Read(buffer, 0, buffer.Length);
             string response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-
-            string serverMSG = response.Substring(5);
-            JObject joRecive = JObject.Parse(serverMSG);
-
-            if (joRecive.ContainsKey("status"))
+            int firstIndex = response.IndexOf((char)CREATE_ROOM_CODE);
+            if (firstIndex != -1)
             {
-                WaitingRoomWindow objWaitingRoomWindow = new WaitingRoomWindow(m_client, m_username);
-                JObject emptyJson = new JObject();
+                int length = LoginWindow.FourCharsToInt(response.Substring(firstIndex + 1, 4));
 
-                data = LoginWindow.serializeMessage(emptyJson, GET_ROOMS_CODE);
-                stream.Write(data, 0, data.Length);
+                string serverMSG = response.Substring(firstIndex + 5, length);
+                JObject joRecive = JObject.Parse(serverMSG);
 
-                buffer = new byte[1024];
-                bytesRead = stream.Read(buffer, 0, buffer.Length);
-                response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-
-                serverMSG = response.Substring(5);
-
-                joRecive = JObject.Parse(serverMSG);
                 if (joRecive.ContainsKey("status"))
                 {
-                    //JArray joArrRooms = (JArray)joRecive["Rooms"];
-
-                    foreach (var element in joRecive["Rooms"])
-                    {
-                        if (element["name"].ToString() == roomName.Text)
-                        {
-                            var gpJsonObject = new JObject
-                            {
-                                { "id", element["id"].Value<int>() }
-                            };
-                            data = LoginWindow.serializeMessage(gpJsonObject, GET_PLAYERS_IN_ROOM_CODE);
-                            stream.Write(data, 0, data.Length);
-
-                            buffer = new byte[1024];
-                            bytesRead = stream.Read(buffer, 0, buffer.Length);
-                            response = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-
-                            serverMSG = response.Substring(5);
-
-                            joRecive = JObject.Parse(serverMSG);
-                            if (joRecive.ContainsKey("PlayersInRoom"))
-                            {
-                                JArray joArrPlayers = (JArray)joRecive["PlayersInRoom"];
-                                objWaitingRoomWindow.Admin.Content = joArrPlayers[0].ToString();
-                                for (int i = 0; i < joArrPlayers.Count; i++)
-                                {
-                                    objWaitingRoomWindow.AddItem(joArrPlayers[i].ToString());
-                                }
-                                this.Visibility = Visibility.Hidden;
-                                objWaitingRoomWindow.Show();
-                            }
-                        }
-
-                    }
-                    
-                }
-                else
-                {
+                    WaitingRoomWindow objWaitingRoomWindow = new WaitingRoomWindow(m_client, m_username);
+                    objWaitingRoomWindow.updateWindowButtons(m_username);
+                    this.Visibility = Visibility.Hidden;
+                    objWaitingRoomWindow.Show();
                 }
             }
-
+            else
+            {
+                MessageBox.Show("There is other proccess runing in the background");
+            }
         }
-
     }
 }
