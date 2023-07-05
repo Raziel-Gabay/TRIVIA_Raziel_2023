@@ -42,13 +42,13 @@ public:
 
 
 private:
-	sqlite3* db;
-	std::string dbFileName = DB_NAME;
-	int file_exist;
-	int res;
-	const char* sqlStatement;
-	std::string ss; // sqlStatement as String
-	char** errMessage;
+	sqlite3* _db;
+	std::string _dbFileName = DB_NAME;
+	int _file_exist;
+	int _res;
+	const char* _sqlStatement;
+	std::string _sqlStatementStr; // sqlStatement as String
+	char** _errMessage;
 
 };
 
